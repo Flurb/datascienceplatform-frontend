@@ -32,7 +32,7 @@ export default class UploadComponent extends Component {
 
     // Return the value as is.
     return val;
-  };
+  }
 
   render () {
     return (
@@ -49,24 +49,30 @@ export default class UploadComponent extends Component {
           replacer={this.replacer} />
         }
 
-        <div className='divider-2' />
+        <div className='divider-2'/>
         {this.props.fileName && this.props.uploadedFileStructureDescription &&
-        <PreviewComponent
-          file={config.adagucServicesHost + '/opendap/' + this.props.accessToken + '/' + this.props.clientId.replace('/','.') +'/' + this.props.fileName}
-          tableClassName='previewTable'
-          componentClassName='previewComponent'
-          numberOfLinesDisplayed={5}/>
+        <div>
+          <h3>CSV Preview (5 rows)</h3>
+          <PreviewComponent
+            file={config.adagucServicesHost + '/opendap/' + this.props.accessToken + '/' + this.props.clientId.replace('/','.') +'/' + this.props.fileName}
+            tableClassName='previewTable'
+            componentClassName='previewComponent'
+            numberOfLinesDisplayed={5}/>
+        </div>
         }
 
-        <div className='divider-2' />
+        <div className='divider-2'/>
         { this.props.fileName && this.props.uploadedFileStructureDescription &&
         <FileColumnDescriptionComponent accessToken={this.props.accessToken}
           dispatch={this.props.dispatch}
-          actions={this.props.actions}
+          actions={this.props.wpsActions}
           fileName={this.props.fileName}
           fileColumnDescription={this.props.fileColumnDescription}
           fileStructureDescription={this.props.fileStructureDescription}
-          replacer={this.replacer} />
+          replacer={this.replacer}
+          domain={this.props.domain}
+          nrOfStartedProcesses={this.props.nrOfStartedProcesses}
+          runningProcesses={this.props.runningProcesses} />
         }
       </div>
     );
@@ -80,5 +86,9 @@ UploadComponent.propTypes = {
   fileColumnDescription: PropTypes.object,
   fileStructureDescription: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
-  actions: PropTypes.object.isRequired
+  actions: PropTypes.object.isRequired,
+  domain: PropTypes.string,
+  nrOfStartedProcesses: PropTypes.number,
+  runningProcesses: PropTypes.number
+
 };

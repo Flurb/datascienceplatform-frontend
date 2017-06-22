@@ -4,9 +4,10 @@ import TitleComponent from '../../../components/TitleComponent';
 import actions from '../../../actions/userActions';
 import uploadActions from '../../../actions/uploadActions';
 import { actions as formActions } from 'react-redux-form';
+import wpsActions from '../../../actions/WPSActions';
 
 const mapStateToUploadProps = (state) => {
-  return { ...state.fileDescriptionState, ...state.fileStructureDescription, ...state.userState, ...state.uploadState };
+  return { ...state.fileDescriptionState, ...state.fileStructureDescription, ...state.userState, ...state.uploadState, ...state.WPSState };
 };
 
 const mapStateToTitleProps = (state) => {
@@ -24,7 +25,8 @@ const mapDispatchToUploadProps = function (dispatch) {
   return ({
     dispatch: dispatch,
     actions: uploadActions,
-    formActions: formActions
+    formActions: formActions,
+    wpsActions: wpsActions
   });
 };
 

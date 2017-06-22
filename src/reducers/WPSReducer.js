@@ -4,7 +4,7 @@ const handleWPSExecute = (state, payload) => {
   console.log('reducer handleWPSExecute');
   let newRunningProcesses = Object.assign({}, state.runningProcesses);
   let nrOfStartedProcesses = state.nrOfStartedProcesses;
-  newRunningProcesses[nrOfStartedProcesses] = Object.assign({}, Object.assign({}, payload, { isStarted:true, hasFailed: false, isComplete:false, percentageComplete: 0, message:'' }));
+  newRunningProcesses[payload.id] = Object.assign({}, Object.assign({}, payload, { isStarted:true, hasFailed: false, isComplete:false, percentageComplete: 0, message:'' }));
   return Object.assign({}, state, {
     nrOfStartedProcesses: nrOfStartedProcesses + 1,
     runningProcesses: newRunningProcesses
