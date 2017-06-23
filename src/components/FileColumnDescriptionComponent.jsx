@@ -7,7 +7,6 @@ import { Button, Input, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownIt
 
 class RenderProcesses extends Component {
   renderProcess (process) {
-    // console.log(process);
     let value = '-';
     try {
       value = process.result.ExecuteResponse.ProcessOutputs.Output.Data.LiteralData.value;
@@ -42,9 +41,7 @@ class FileColumnDescriptionComponent extends Component {
     var completeFileDescription = JSON.stringify(Object.assign({}, this.props.fileColumnDescription, this.props.fileStructureDescription), this.props.replacer);
     var originalFileName = this.props.fileName;
     var fileName = originalFileName.replace(/\.[^/.]+$/, '_descr.json');
-    const { accessToken, dispatch, actions, nrOfStartedProcesses, router, domain } = this.props;
-
-    var scanProcess = nrOfStartedProcesses + 'scanProcess';
+    const { accessToken, dispatch, actions, uploadActions, nrOfStartedProcesses, router, domain } = this.props;
 
     var formData = new FormData();
     formData.append('files', new Blob([completeFileDescription], { type:'' }), fileName);
@@ -59,15 +56,27 @@ class FileColumnDescriptionComponent extends Component {
         console.log(result.body);
 
         // TODO: Foutafhandeling
+
+        // Start the scan process
+        var scanProcess = originalFileName + '_scanProcess_' + new Date().toString();
+        dispatch(uploadActions.setUploadScanProcess(scanProcess));
+
         dispatch(actions.startWPSExecute(domain, accessToken, 'scanCSVProcess',
           '[inputCSVPath=' + originalFileName + ';descCSVPath=' + fileName + ';]',
           scanProcess));
-
-        // router.push('/joblist');
       });
   }
 
+  goToWrangler () {
+
+    const { dispatch, actions } = this.props;
+
+    dispatch(actions.setCSVFileToWrangle({ fileName: this.props.fileName }));
+    this.props.router.push('/wrangler');
+  }
+
   render () {
+
     return (
       <div>
         <div className='alert alert-info col-6'>
@@ -207,7 +216,18 @@ class FileColumnDescriptionComponent extends Component {
             </Button>
           </Form>
 
+          <div className='divider-2' />
+
           <RenderProcesses runningProcesses={ this.props.runningProcesses } />
+
+          <div className='divider-2' />
+
+          { this.props.runningProcesses[this.props.uploadScanProcess] &&
+              this.props.runningProcesses[this.props.uploadScanProcess].isComplete &&
+              !this.props.runningProcesses[this.props.uploadScanProcess].hasFailed &&
+              <Button color='primary' onClick={() => this.goToWrangler()}>Wrangle!</Button>
+          }
+
         </div>
       </div>
     );

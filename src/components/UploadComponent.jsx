@@ -66,13 +66,15 @@ export default class UploadComponent extends Component {
         <FileColumnDescriptionComponent accessToken={this.props.accessToken}
           dispatch={this.props.dispatch}
           actions={this.props.wpsActions}
+          uploadActions={this.props.actions}
           fileName={this.props.fileName}
           fileColumnDescription={this.props.fileColumnDescription}
           fileStructureDescription={this.props.fileStructureDescription}
           replacer={this.replacer}
           domain={this.props.domain}
           nrOfStartedProcesses={this.props.nrOfStartedProcesses}
-          runningProcesses={this.props.runningProcesses} />
+          runningProcesses={this.props.runningProcesses}
+          uploadScanProcess={this.props.uploadScanProcess}/>
         }
       </div>
     );
@@ -86,9 +88,11 @@ UploadComponent.propTypes = {
   fileColumnDescription: PropTypes.object,
   fileStructureDescription: PropTypes.object,
   dispatch: PropTypes.func.isRequired,
+  wpsActions: PropTypes.object,
   actions: PropTypes.object.isRequired,
   domain: PropTypes.string,
   nrOfStartedProcesses: PropTypes.number,
-  runningProcesses: PropTypes.number
+  runningProcesses: PropTypes.number,
+  uploadScanProcess: PropTypes.string
 
 };
