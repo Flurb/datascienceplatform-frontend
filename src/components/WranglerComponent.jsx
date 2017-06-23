@@ -8,9 +8,11 @@ import { withRouter } from 'react-router';
 
 class RenderProcesses extends Component {
   renderProcess (process) {
-    let value = '-';
+    const { accessToken } = this.props;
+    let value = '';
     try {
       value = process.result.ExecuteResponse.ProcessOutputs.Output.Data.LiteralData.value;
+      value = value.replace('/opendap/', '/opendap/' + accessToken + '/');
     } catch (e) {
     }
     return (
@@ -20,6 +22,14 @@ class RenderProcesses extends Component {
           <Col>{process.message}</Col>
           <Col>{value}</Col>
         </Row>
+        { value && value.length > 0 ? <h2>Succesfully wrangled:</h2> : null }
+        <PreviewComponent
+          file={value}
+          numberOfLinesDisplayed={10}
+          tableClassName='previewTable'
+          componentClassName='previewComponent'
+        />
+
       </Card>
     );
   }
@@ -38,7 +48,8 @@ class RenderProcesses extends Component {
 };
 
 RenderProcesses.propTypes = {
-  runningProcesses: PropTypes.object.isRequired
+  runningProcesses: PropTypes.object.isRequired,
+  accessToken: PropTypes.string.isRequired
 };
 
 const defaultWranglingSettings = {
@@ -258,7 +269,7 @@ class WranglerComponent extends Component {
           componentClassName='previewComponent'
         />
         <hr />
-        <RenderProcesses runningProcesses={runningProcesses} />
+        <RenderProcesses runningProcesses={runningProcesses} accessToken={accessToken} />
         <Button color='primary' style={{ float:'right' }} onClick={this.startWrangling}>Start wrangling</Button>
         <Modal className='catalogMetadataModal' isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Metadata for [{this.state.title}]</ModalHeader>
